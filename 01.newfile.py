@@ -4,13 +4,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    # هذا السطر سيقرأ الإحداثيات من الرابط مباشرة بدلاً من input
+    # سيبحث الموقع عن الإحداثيات في الرابط: /?lat=32&lon=13
     lat = request.args.get('lat')
     lon = request.args.get('lon')
     
     if lat and lon:
-        return f"تم استلام الموقع: خط العرض {lat} وخط الطول {lon}"
-    return "مرحباً! يرجى إرسال الإحداثيات عبر الرابط."
+        return f"تم استلام الموقع بنجاح: خط العرض {lat} وخط الطول {lon}"
+    else:
+        return "يرجى إضافة الإحداثيات إلى الرابط، مثال: /?lat=32.8&lon=13.1"
 
 if __name__ == "__main__":
     app.run()
